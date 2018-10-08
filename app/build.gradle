@@ -6,9 +6,9 @@ android {
     defaultConfig {
         applicationId "com.jedlik"
         minSdkVersion 17
-        targetSdkVersion 23
-        versionCode 14
-        versionName "1.14"
+        targetSdkVersion 26
+        versionCode 16
+        versionName "1.15"
         generatedDensities = []
 
     }

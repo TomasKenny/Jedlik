@@ -31,7 +31,7 @@ public class CRestaurantPool {
         list.add(new RestaurantRebio(activity));
         list.add(new RestaurantIq(activity));
         list.add(new RestaurantMakalu(activity));
-        list.add(new RestaurantAvast(activity));
+        //list.add(new RestaurantAvast(activity));
         return list;
     }
 }

@@ -56,7 +56,7 @@ public class RestaurantMyFood extends CRestaurantBase
                     return meals;
             }
 
-            Document doc = Jsoup.connect("http://www.myfoodmarket.cz/brno-holandska").get();
+            Document doc = Jsoup.connect("https://www.sklizeno.cz/o-nas/brno-holandska").get();
             Elements mealsDiv = doc.getElementsByClass("jidla");
             if(mealsDiv.size() == 0){
                 return meals;
