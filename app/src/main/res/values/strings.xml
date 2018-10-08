@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Gourmet</string>
+    <string name="settings">Settings</string>
+    <string name="notif_title">Gourmet</string>
+    <string name="notif_text">It is time to eat!</string>
+    <string name="no_meals_today">Nothing found for today :-(</string>
+    <string name="notif">Notifications</string>
+    <string name="notif_show">Show notifications</string>
+    <string name="notif_time">Notification time</string>
+    <string name="notif_time_summary">Every working day at %s</string>
+    <string name="content_setting">Content</string>
+    <string name="set">Set</string>
+    <string name="cancel">Cancel</string>
+    <string name="favorites">Favorite meals</string>
+    <string name="favorites_summary">Highlight meals containing specified keywords, separated by comma</string>
+  	<string name="choose_rests">Restaurant selection</string>
+    <string name="choose_rests_summary">Choose which restaurants should appear on the list and in which order</string>
+    <string name="next_start">Settings are applied on next start of the app</string>
+    
+    <string name="show_notif_pref">show_notif_pref</string>
+    <string name="notif_time_pref">notif_time_pref</string>
+    <string name="favorites_pref">favorites_pref</string>
+    <string name="choose_restaurants_pref">choose_restaurants_pref</string>
+</resources>

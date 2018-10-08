@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Jedák</string>
+    <string name="settings">Nastavenie</string>
+    <string name="notif_title">Jedák</string>
+    <string name="notif_text">Je na čase niečo zjesť!</string>
+    <string name="no_meals_today">Pre dnešný deň nič nenájdené :-(</string>
+    <string name="notif">Upozornenie</string>
+    <string name="notif_show">Zobrazovať upozornenia</string>
+    <string name="notif_time">Čas upozornenia</string>
+    <string name="notif_time_summary">Každý pracovný deň v %s</string>
+    <string name="content_setting">Obsah</string>
+    <string name="set">Nastaviť</string>
+    <string name="cancel">Zrušiť</string>
+    <string name="favorites">Obľúbené jedlá</string>
+    <string name="favorites_summary">Zvýrazní jedlá obsahujúce zadané kľúčové slová oddelené čiarkou</string>
+    <string name="choose_rests">Výber reštaurácií</string>
+    <string name="choose_rests_summary">Vyberte, ktoré podniky sa majú zobrazovať a v akom poradí</string>
+    <string name="next_start">Zmeny sa prejavia po ďalšom spustení</string>
+
+    <string name="show_notif_pref">show_notif_pref</string>
+    <string name="notif_time_pref">notif_time_pref</string>
+    <string name="favorites_pref">favorites_pref</string>
+    <string name="choose_restaurants_pref">choose_restaurants_pref</string>
+</resources>

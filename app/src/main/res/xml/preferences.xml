@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/notif"
+        android:key="pref_key_notif_settings">
+
+        <SwitchPreference
+            android:key="@string/show_notif_pref"
+            android:title="@string/notif_show"
+            android:defaultValue="true"
+        />
+        <com.jedlik.TimePreference
+            android:key="notif_time_pref"
+            android:title="@string/notif_time"
+        />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/content_setting"
+        android:key="pref_key_content_settings">
+
+        <com.jedlik.SortingPreference
+            android:key="@string/choose_restaurants_pref"
+            android:title="@string/choose_rests"
+            android:summary="@string/choose_rests_summary"
+        />
+
+        <EditTextPreference
+            android:key="@string/favorites_pref"
+            android:title="@string/favorites"
+            android:summary="@string/favorites_summary"
+        />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
