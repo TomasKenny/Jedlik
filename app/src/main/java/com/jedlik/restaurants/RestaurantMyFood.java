@@ -32,7 +32,7 @@ public class RestaurantMyFood extends CRestaurantBase
     //constructor
     public RestaurantMyFood(Activity c){
         m_context = c;
-        m_name = "My Food Holandská";
+        m_name = "Sklizeno Holandská";
         m_resid = CRestaurantPool.ID_MYFOOD;
     }
 

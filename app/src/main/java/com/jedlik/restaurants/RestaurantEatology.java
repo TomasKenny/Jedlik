@@ -21,24 +21,33 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by Tom on 6.7.2016.
+ * Created by Erik on 13.1.2019.
  */
-public class RestaurantTesar extends CRestaurantBase
+public class RestaurantEatology extends CRestaurantBase
 {
     //private String m_pdfContent;
 
     //constructor
-    public RestaurantTesar(Activity c){
+    public RestaurantEatology(Activity c){
         m_context = c;
-        m_name = "Hostinec U Tesaře";
-        m_resid = CRestaurantPool.ID_TESAR;
+        m_name = "Eatology";
+        m_resid = CRestaurantPool.ID_EATOLOGY;
     }
 
-    private final String [] specialMealNames = {
-            "menu týdne", "vegetariánská specialita", "ryba týdne", "salát", "ryba", "vegetariánské menu", "cheeseburger", "burger"
+    private final String dailyMenuKW = "polední nabídka";
+    private final String weeklyMenuKW = "týdenní nabídka";
+    private final String dailyMenuEnglishKW = "lunch menu";
+    private final String weeklyMenuEnglishKW = "weekly offer";
+
+    private final String [] dailyMenuSectionNames = {
+            "polévky", "těstoviny", "pizza", "hlavní jídla", "eatology special"
+    };
+    private final String [] weeklyMenuSectionNames = {
+            "wok", "hamburger", "gril"
     };
 
-    private final Pattern m_pattern2 = Pattern.compile("^(\\d\\.)(.*)");
+    // examples: 150 g řízek - 0,33 l vývar - ¼ kuře
+    private final Pattern m_pattern2 = Pattern.compile("^((\\d+\\s+g)|(\\d+,\\d+\\s+l)|([\\xBC-\\xBE]))\\s(.*)");
 
     protected List<String> JoinSplitLines(String textStr []){
         List<String> newList = new ArrayList<>();
@@ -48,19 +57,14 @@ public class RestaurantTesar extends CRestaurantBase
             int joinedLinesCount = 0;
 
             //join only lines which begin with a number or these keywords
-            if( (m.matches() ||
-                textStr[i].toLowerCase().startsWith(specialMealNames[0]) ||
-                textStr[i].toLowerCase().startsWith(specialMealNames[1]) ||
-                textStr[i].toLowerCase().startsWith(specialMealNames[2]) ||
-                textStr[i].toLowerCase().startsWith(specialMealNames[3]) ||
-                textStr[i].toLowerCase().startsWith(specialMealNames[4]) ||
-                textStr[i].toLowerCase().startsWith(specialMealNames[5]) ||
-                textStr[i].toLowerCase().startsWith(specialMealNames[6]) ||
-                textStr[i].toLowerCase().startsWith(specialMealNames[7]))
-                    && !textStr[i].matches("(.*)(\\d{2,3}|(…,-))(.{0,5})"))
+            if( (m.matches())
+                    && !textStr[i].matches("(.*\\D)(\\d+)\\s+Kč\\s*"))
             {
                 for(int j = i + 1; j < textStr.length; j++){
-                    if(textStr[j].matches("(.*)(\\d{2,3}|(…,-))(.{0,5})")){
+                    if (textStr[j].startsWith(dailyMenuKW) || textStr[j].startsWith(weeklyMenuKW)
+                            || textStr[j].startsWith(dailyMenuEnglishKW) || textStr[j].startsWith(weeklyMenuEnglishKW))
+                        break;
+                    if(textStr[j].matches("(.*\\D)(\\d+)\\s+Kč\\s*")){
                         joinedLinesCount = j - i;
                         break;
                     }
@@ -83,7 +87,7 @@ public class RestaurantTesar extends CRestaurantBase
 
     protected String GetLastSavedMenu(){
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
-        String content = sharedPref.getString("tesarmenutext", "");
+        String content = sharedPref.getString("eatologymenutext", "");
         if(content.isEmpty()){
             return content;
         }
@@ -117,7 +121,7 @@ public class RestaurantTesar extends CRestaurantBase
             }
 
             FileDownloader.DownloadFromUrl(
-                    "http://www.utesare.cz/Menu.pdf",
+                    "http://www.iqrestaurant.cz/brno/menu.pdf",
                     m_context.getFilesDir().toString(),
                     "menu.pdf"
             );
@@ -130,7 +134,7 @@ public class RestaurantTesar extends CRestaurantBase
             if(!content.isEmpty()) {
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
                 SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString("tesarmenutext", content);
+                editor.putString("eatologymenutext", content);
                 editor.commit();
             }
             return ParseText(content);
@@ -146,10 +150,7 @@ public class RestaurantTesar extends CRestaurantBase
     }*/
 
     private final Pattern m_pattern
-            = Pattern.compile("^(\\d\\.)(\\s*)(.*)(\\s+)(\\d+)(\\D*)");
-
-    private final Pattern m_specialMealPattern
-            = Pattern.compile("^(.*)(\\s+)(\\d+|(…,-))(\\D*)");
+            = Pattern.compile("^((\\d+\\s+g)|(\\d+,\\d+\\s+l)|([\\xBC-\\xBE]))\\s(.*\\D)(\\d+)\\sKč");
 
     public List<CMeal> ParseText(String text){
         List<CMeal> meals = new ArrayList<>();
@@ -160,61 +161,33 @@ public class RestaurantTesar extends CRestaurantBase
             return meals;
         }
 
-        boolean gotoSpecialMeals = false;
-
+        String dailyMenuSectionName = dailyMenuKW + " " + Utils.daysInWeek[today];
         for(int i = 0; i < lines.size(); i++){
-            if(lines.get(i).toLowerCase().startsWith(Utils.daysInWeek[today])){
+            if(lines.get(i).toLowerCase().startsWith(dailyMenuSectionName)){
                 i++;
-                boolean firstItem = true;
+                boolean parsingWeeklyMenu = false;
+                boolean parsingPizzaSection = false;
                 while(i < lines.size()){
-                    CMeal meal;
-                    if(firstItem){
-                        //soup
-                        meal = new CMeal(lines.get(i), 0);
-                        meals.add(meal);
-                        firstItem = false;
-                    }
-                    else{
-                        Matcher m = m_pattern.matcher(lines.get(i));
-                        if(!m.matches()){
-                            gotoSpecialMeals = true;
-                            break;
+                    Matcher m = m_pattern.matcher(lines.get(i));
+                    if(!m.matches()) {
+                        if (parsingWeeklyMenu) {
+                            if (lines.get(i).toLowerCase().startsWith(dailyMenuEnglishKW)) // end of day section reached
+                                break;
                         }
-                        meal = new CMeal(m.group(3), Integer.parseInt(m.group(5)));
-                        meals.add(meal);
+                        parsingPizzaSection = (lines.get(i).toLowerCase().startsWith("pizza"));
+                        if (lines.get(i).toLowerCase().startsWith(weeklyMenuKW))
+                            parsingWeeklyMenu = true;
+                        i++;
+                        continue;
                     }
+                    String mealName = (parsingPizzaSection ? "Pizza " + m.group(5) : m.group(1) + " " + m.group(5));
+                    CMeal meal = new CMeal(mealName, Integer.parseInt(m.group(6)));
+                    meals.add(meal);
                     i++;
                 }
-                if(gotoSpecialMeals){
-                    break;
-                }
             }
         }
 
-        //special meals
-        boolean [] counter = { true, true, true, true, true, true, true, true };
-        for(int i = 0; i < lines.size(); i++){
-            int mealIndex = -1;
-            for(int j = 0; j < specialMealNames.length; j++) {
-                if(lines.get(i).trim().toLowerCase().startsWith(specialMealNames[j]) && counter[j]){
-                    mealIndex = j;
-                    break;
-                }
-            }
-
-            if(mealIndex < 0){
-                continue;
-            }
-
-            Matcher m = m_specialMealPattern.matcher(lines.get(i));
-            if(!m.matches()){
-                continue;
-            }
-            CMeal meal = new CMeal(m.group(1), Utils.MyStringToInt(m.group(3)));
-            meals.add(meal);
-            counter[mealIndex] = false;
-        }
         return meals;
     }
 }
-

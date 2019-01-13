@@ -67,11 +67,11 @@ public class RestaurantMakalu extends CRestaurantBase {
 
     //1. 150g Chicken kormal<span class='cena'>95/111 Kč</span></b><br>
     //        Kuřecí kousky s jemnou omáčkou.<br>
-    private final Pattern m_pattern = Pattern.compile("^\\d+\\.(.*)<.*>(\\d+)/\\d+.*<br>(.*)<br>(.*)");
+    private final Pattern m_pattern = Pattern.compile("^\\d+\\.(.*)<.*>(\\d+)(/\\d+)?.*<br>(.*)<br>(.*)");
 
     private void AddMeals(String [] mealsToday, List<CMeal> meals){
         for(String oneMealStr: mealsToday) {
-            if(oneMealStr.contains("polévka")){
+            if(oneMealStr.contains("polévka") || oneMealStr.contains("polevka")){
                 String [] soupArray = oneMealStr.split("<br>");
                 if(soupArray.length > 0){
                     String soupName = soupArray[soupArray.length - 1];
@@ -85,7 +85,7 @@ public class RestaurantMakalu extends CRestaurantBase {
             if (!m.matches()) {
                 continue;
             }
-            String mealName = m.group(1) + " - " + m.group(3);
+            String mealName = m.group(1) + " - " + m.group(4);
             mealName = mealName.replace("</b>", "");
             int cost = Integer.parseInt(m.group(2));
             meals.add(new CMeal(mealName, cost));
