@@ -180,8 +180,10 @@ public class RestaurantEatology extends CRestaurantBase
                         i++;
                         continue;
                     }
-                    String mealName = (parsingPizzaSection ? "Pizza " + m.group(5) : m.group(1) + " " + m.group(5));
-                    CMeal meal = new CMeal(mealName, Integer.parseInt(m.group(6)));
+                    String mealName = m.group(5);
+                    if (parsingPizzaSection && !mealName.toLowerCase().startsWith("pizza"))
+                        mealName = "PIZZA " + mealName;
+                    CMeal meal = new CMeal(m.group(1) + " " + mealName, Integer.parseInt(m.group(6)));
                     meals.add(meal);
                     i++;
                 }

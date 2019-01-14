@@ -34,11 +34,7 @@ public class RestaurantTesar extends CRestaurantBase
         m_resid = CRestaurantPool.ID_TESAR;
     }
 
-    private final String [] specialMealNames = {
-            "menu týdne", "vegetariánská specialita", "ryba týdne", "salát", "ryba", "vegetariánské menu", "cheeseburger", "burger"
-    };
-
-    private final Pattern m_pattern2 = Pattern.compile("^(\\d\\.)(.*)");
+    private final Pattern m_pattern2 = Pattern.compile("^((\\d\\.)|((\\D*[Ss]alát\\D*)|(\\D*[Rr]yba\\D*)|(\\D*[Bb]urger\\D*)|(\\D*[Vv]egetarián\\D*):))(.*)");
 
     protected List<String> JoinSplitLines(String textStr []){
         List<String> newList = new ArrayList<>();
@@ -48,15 +44,7 @@ public class RestaurantTesar extends CRestaurantBase
             int joinedLinesCount = 0;
 
             //join only lines which begin with a number or these keywords
-            if( (m.matches() ||
-                textStr[i].toLowerCase().startsWith(specialMealNames[0]) ||
-                textStr[i].toLowerCase().startsWith(specialMealNames[1]) ||
-                textStr[i].toLowerCase().startsWith(specialMealNames[2]) ||
-                textStr[i].toLowerCase().startsWith(specialMealNames[3]) ||
-                textStr[i].toLowerCase().startsWith(specialMealNames[4]) ||
-                textStr[i].toLowerCase().startsWith(specialMealNames[5]) ||
-                textStr[i].toLowerCase().startsWith(specialMealNames[6]) ||
-                textStr[i].toLowerCase().startsWith(specialMealNames[7]))
+            if( m.matches()
                     && !textStr[i].matches("(.*)(\\d{2,3}|(…,-))(.{0,5})"))
             {
                 for(int j = i + 1; j < textStr.length; j++){
@@ -149,7 +137,7 @@ public class RestaurantTesar extends CRestaurantBase
             = Pattern.compile("^(\\d\\.)(\\s*)(.*)(\\s+)(\\d+)(\\D*)");
 
     private final Pattern m_specialMealPattern
-            = Pattern.compile("^(.*)(\\s+)(\\d+|(…,-))(\\D*)");
+            = Pattern.compile("^(((\\D*[Ss]alát\\D*)|(\\D*[Rr]yba\\D*)|(\\D*[Bb]urger\\D*)|(\\D*[Vv]egetarián\\D*):)(.*)(\\s+))(\\d+|(…,-))(\\D*)");
 
     public List<CMeal> ParseText(String text){
         List<CMeal> meals = new ArrayList<>();
@@ -162,7 +150,8 @@ public class RestaurantTesar extends CRestaurantBase
 
         boolean gotoSpecialMeals = false;
 
-        for(int i = 0; i < lines.size(); i++){
+        int i;
+        for(i = 0; i < lines.size(); i++){
             if(lines.get(i).toLowerCase().startsWith(Utils.daysInWeek[today])){
                 i++;
                 boolean firstItem = true;
@@ -192,27 +181,13 @@ public class RestaurantTesar extends CRestaurantBase
         }
 
         //special meals
-        boolean [] counter = { true, true, true, true, true, true, true, true };
-        for(int i = 0; i < lines.size(); i++){
-            int mealIndex = -1;
-            for(int j = 0; j < specialMealNames.length; j++) {
-                if(lines.get(i).trim().toLowerCase().startsWith(specialMealNames[j]) && counter[j]){
-                    mealIndex = j;
-                    break;
-                }
-            }
-
-            if(mealIndex < 0){
-                continue;
-            }
-
+        for(; i < lines.size(); i++){
             Matcher m = m_specialMealPattern.matcher(lines.get(i));
             if(!m.matches()){
                 continue;
             }
-            CMeal meal = new CMeal(m.group(1), Utils.MyStringToInt(m.group(3)));
+            CMeal meal = new CMeal(m.group(1), Utils.MyStringToInt(m.group(9)));
             meals.add(meal);
-            counter[mealIndex] = false;
         }
         return meals;
     }
