@@ -20,6 +20,7 @@ public class CRestaurantPool {
     public final static int ID_IQ = 0x04505D06;
     public final static int ID_MAKALU = 0x04505D07;
     public final static int ID_EATOLOGY = 0x04505D08;
+    public final static int ID_SNOPEK = 0x04505D09;
     public final static int ID_AVAST = 0x04505111;
 
     public static List<IRestaurant> GetRestaurants(Activity activity){
@@ -33,6 +34,7 @@ public class CRestaurantPool {
 //        list.add(new RestaurantIq(activity));
         list.add(new RestaurantMakalu(activity));
         list.add(new RestaurantEatology(activity));
+        list.add(new RestaurantSnopek(activity));
         //list.add(new RestaurantAvast(activity));
         return list;
     }
