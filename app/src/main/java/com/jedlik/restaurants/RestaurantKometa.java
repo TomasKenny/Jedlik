@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Tom on 9.7.2016.
@@ -31,6 +33,17 @@ public class RestaurantKometa extends CRestaurantBase
         m_resid = CRestaurantPool.ID_KOMETA;
     }
 
+
+    private final Pattern m_mealNamePattern
+            = Pattern.compile("^(.*[^\\d\\s,])\\s*(\\d+[,\\s?\\d+]*)");
+
+    String RemoveAllergens(String mealName) {
+        Matcher m = m_mealNamePattern.matcher(mealName);
+        if (m.matches())
+            return m.group(1);
+
+        return mealName;
+    }
 
 
     @Override
@@ -70,7 +83,7 @@ public class RestaurantKometa extends CRestaurantBase
                     pairItemText = pairItemText.trim();
 
                     if(i == 0){
-                        meal.m_mealName = pairItemText;
+                        meal.m_mealName = RemoveAllergens(pairItemText);
                     }
                     else{
                         pairItemText = pairItemText.replace(",-", "");
@@ -85,6 +98,5 @@ public class RestaurantKometa extends CRestaurantBase
         }
         return meals;
     }
-
 
 }

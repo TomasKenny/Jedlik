@@ -169,6 +169,8 @@ public class RestaurantMoravka extends CRestaurantBase
             String priceNumber = m1.group(4);
             m1 = m_dishLastLinePattern.matcher(mealName);
             boolean allergensFound = m1.matches();
+            if (allergensFound)
+                mealName = m1.group(1);
             while (!allergensFound && i+1<lines.size()) {
                 String otherLine = lines.get(i+1);
                 Matcher m2 = m_dishLastLinePattern.matcher(otherLine);
@@ -185,7 +187,7 @@ public class RestaurantMoravka extends CRestaurantBase
                 }
                 i++;
             }
-            CMeal meal = new CMeal(mealName, Integer.parseInt(priceNumber));
+            CMeal meal = new CMeal(mealName.replace(",", ", ").replace("  ", " "), Integer.parseInt(priceNumber));
             meals.add(meal);
         }
 
