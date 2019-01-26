@@ -74,30 +74,39 @@ public class SortingPreference extends DialogPreference {
                 break;
             }
 
-            //add restaurants which are new
+            //get actual list of available restaurants to compare
             List<IRestaurant> restList = CRestaurantPool.GetRestaurants((Activity)m_context);
-            for(int i = 0; i < restList.size(); i++){
+
+            //go through saved order list, remove obsolete restaurants, change name of renamed restaurants
+            for (int i=0; i<restOrder.size(); i++) {
                 boolean found = false;
-                for(int j = 0; j < restOrder.size(); j++){
-                    if(restList.get(i).GetResId() == restOrder.get(j).m_id){
+                for (int j=0; j<restList.size(); j++) {
+                    if (restOrder.get(i).m_id == restList.get(j).GetResId()) {
                         found = true;
+                        restOrder.get(i).m_name = restList.get(j).GetName(); // update name
+                        restList.remove(j);
                         break;
                     }
                 }
-                if(!found){
-                    restOrder.add(new Utils.RestaurantOrderItem(
-                                    restList.get(i).GetResId(),
-                                    restList.get(i).GetName(),
-                                    false
-                            )
-                    );
+                if (!found) {   // remove unavailable restaurant
+                    restOrder.remove(i);
+                    i--;
                 }
             }
-            return restOrder;
+            //add restaurants which are new
+            for (int k=0; k<restList.size(); k++) {
+                restOrder.add(new Utils.RestaurantOrderItem(
+                                restList.get(k).GetResId(),
+                                restList.get(k).GetName(),
+                                false
+                        )
+                );
+            }
 
+            return restOrder;
         }while(false);
 
-        //if something goes wrong, get al restaurants
+        //if something goes wrong, get all restaurants
         List<IRestaurant> restList = CRestaurantPool.GetRestaurants((Activity)m_context);
         List<Utils.RestaurantOrderItem> allRests = new ArrayList<>();
         for(int i = 0; i < restList.size(); i++){
