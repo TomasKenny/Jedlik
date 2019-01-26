@@ -67,7 +67,9 @@ public class RestaurantTusto extends CRestaurantBase
                 for(int j = 1; j < mealsToday.size(); j++){
                     GetOneMeal(meals, mealsToday.get(j));
                 }
-
+                //fix: return immediately after parsing one respective weekday
+                //(there happen to be multiple the same weekdays, e.g. this Friday and Friday next week)
+                return meals;
             }
         }
         catch(Exception e){
