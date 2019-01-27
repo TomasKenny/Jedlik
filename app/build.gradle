@@ -7,8 +7,8 @@ android {
         applicationId "com.jedlik"
         minSdkVersion 17
         targetSdkVersion 26
-        versionCode 17
-        versionName "1.17"
+        versionCode 18
+        versionName "1.18"
         generatedDensities = []
 
     }
