@@ -56,8 +56,6 @@ public class RestaurantMoravka extends CRestaurantBase
         }
         int today = Utils.GetDayOfWeek();
         Calendar calendar = Calendar.getInstance();
-        final long startOfWeekMs = System.currentTimeMillis() - (today - Calendar.MONDAY) * 86400 * 1000;
-        calendar.setTimeInMillis(startOfWeekMs);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH) - Calendar.JANUARY + 1;
 
