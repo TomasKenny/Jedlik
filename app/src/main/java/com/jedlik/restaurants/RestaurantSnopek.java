@@ -31,7 +31,7 @@ public class RestaurantSnopek extends CRestaurantBase {
     //Polévka: Fazolová polévka (1,9)
     //1. Segedínský vepřový guláš, houskový knedlík (1,3,7)
     //Moučník 1: Lívance s povidlím a tvarohem – 2ks (1,3,7)
-    private final Pattern m_pattern = Pattern.compile("^(Polévka\\s*:|\\d\\s*\\.|Moučník\\s*\\d\\s*:)\\s*(.*)\\s*(\\([\\d,\\s]+\\))");
+    private final Pattern m_pattern = Pattern.compile("^(Polévka\\s*:|\\d\\s*\\.|Moučník\\s*\\d\\s*:)\\s*(.*)\\s*(\\([\\d,\\s]+\\))\\s*(([\\d]+)\\s*Kč)?");
 
     private final String desertKW = "Moučník";
 
@@ -99,7 +99,10 @@ public class RestaurantSnopek extends CRestaurantBase {
                 String mealName = m.group(2);
                 if (m.group(1).toLowerCase().startsWith(desertKW.toLowerCase()))
                     mealName = desertKW + ": " + mealName;
-                CMeal meal = new CMeal(mealName, 0);
+                int mealPrice = 0;
+                if (m.group(5) != null && !m.group(5).isEmpty())
+                    mealPrice = Utils.MyStringToInt(m.group(5));
+                CMeal meal = new CMeal(mealName, mealPrice);
                 meals.add(meal);
             }
             return foundToday;
