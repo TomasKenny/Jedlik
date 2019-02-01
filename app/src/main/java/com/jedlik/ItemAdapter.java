@@ -17,11 +17,16 @@ public class ItemAdapter extends DragItemAdapter<Utils.RestaurantOrderItem, Item
     private int mGrabHandleId;
 
     public ItemAdapter(ArrayList<Utils.RestaurantOrderItem> list, int layoutId, int grabHandleId, boolean dragOnLongPress) {
-        super(dragOnLongPress);
+        super();
         mLayoutId = layoutId;
         mGrabHandleId = grabHandleId;
         setHasStableIds(true);
         setItemList(list);
+    }
+
+    @Override
+    public long getUniqueItemId(int position){
+        return mItemList.get(position).m_id;
     }
 
     @Override
@@ -42,11 +47,6 @@ public class ItemAdapter extends DragItemAdapter<Utils.RestaurantOrderItem, Item
     }
 
     @Override
-    public long getItemId(int position) {
-        return mItemList.get(position).m_id;
-    }
-
-    @Override
     public void onCheckedChanged(CompoundButton button, boolean isChecked){
         Integer id = (Integer)button.getTag();
         if(id == null){
@@ -60,7 +60,8 @@ public class ItemAdapter extends DragItemAdapter<Utils.RestaurantOrderItem, Item
         }
     }
 
-    public class ViewHolder extends DragItemAdapter<Utils.RestaurantOrderItem, ItemAdapter.ViewHolder>.ViewHolder {
+    public class ViewHolder extends DragItemAdapter.ViewHolder {
+
         public TextView mText;
         public CheckBox mCheckBox;
         /*CompoundButton.OnCheckedChangeListener m_checkboxListener =
@@ -76,7 +77,7 @@ public class ItemAdapter extends DragItemAdapter<Utils.RestaurantOrderItem, Item
             };*/
 
         public ViewHolder(final View itemView) {
-            super(itemView, mGrabHandleId);
+            super(itemView, mGrabHandleId, false);
             mText = (TextView) itemView.findViewById(R.id.text);
             mCheckBox = (CheckBox)itemView.findViewById(R.id.restcheckbox);
         }
