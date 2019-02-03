@@ -1,2 +1,0 @@
-configurations.create("default")
-artifacts.add("default", file('core-1.54.0.0.jar'))

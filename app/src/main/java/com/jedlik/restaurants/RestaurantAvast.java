@@ -10,8 +10,7 @@ import com.jedlik.CMeal;
 import com.jedlik.CMyPdfReader;
 import com.jedlik.FileDownloader;
 import com.jedlik.Utils;
-
-import org.apache.pdfbox.util.PDFBoxResourceLoader;
+import com.tom_roush.pdfbox.util.PDFBoxResourceLoader;
 
 import java.io.File;
 import java.util.ArrayList;
