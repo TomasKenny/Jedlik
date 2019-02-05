@@ -11,23 +11,17 @@ import com.woxthebox.draglistview.DragItemAdapter;
 
 import java.util.ArrayList;
 
-public class ItemAdapter extends DragItemAdapter<Utils.RestaurantOrderItem, ItemAdapter.ViewHolder>
-{
+public class ItemAdapter extends DragItemAdapter<Utils.RestaurantOrderItem, ItemAdapter.ViewHolder> implements CompoundButton.OnCheckedChangeListener {
 
     private int mLayoutId;
     private int mGrabHandleId;
 
-    public ItemAdapter(ArrayList<Utils.RestaurantOrderItem> list, int layoutId, int grabHandleId) {
-        super();
+    public ItemAdapter(ArrayList<Utils.RestaurantOrderItem> list, int layoutId, int grabHandleId, boolean dragOnLongPress) {
+        super(dragOnLongPress);
         mLayoutId = layoutId;
         mGrabHandleId = grabHandleId;
         setHasStableIds(true);
         setItemList(list);
-    }
-
-    @Override
-    public long getUniqueItemId(int position){
-        return mItemList.get(position).m_id;
     }
 
     @Override
@@ -41,16 +35,32 @@ public class ItemAdapter extends DragItemAdapter<Utils.RestaurantOrderItem, Item
         super.onBindViewHolder(holder, position);
         String text = mItemList.get(position).m_name;
         holder.mText.setText(text);
-        holder.mCheckBox.setTag(new Integer(mItemList.get(position).m_id));
+        holder.itemView.setTag(text);
         holder.mCheckBox.setChecked(mItemList.get(position).m_isActive);
+        holder.mCheckBox.setTag(new Integer(mItemList.get(position).m_id));
+        holder.mCheckBox.setOnCheckedChangeListener(this);
     }
 
+    @Override
+    public long getItemId(int position) {
+        return mItemList.get(position).m_id;
+    }
 
+    @Override
+    public void onCheckedChanged(CompoundButton button, boolean isChecked){
+        Integer id = (Integer)button.getTag();
+        if(id == null){
+            return;
+        }
+        for(int i = 0; i < mItemList.size(); i++){
+            if(mItemList.get(i).m_id == id){
+                mItemList.get(i).m_isActive = isChecked;
+                return;
+            }
+        }
+    }
 
-    public class ViewHolder extends DragItemAdapter.ViewHolder
-            implements CompoundButton.OnCheckedChangeListener
-    {
-
+    public class ViewHolder extends DragItemAdapter<Utils.RestaurantOrderItem, ItemAdapter.ViewHolder>.ViewHolder {
         public TextView mText;
         public CheckBox mCheckBox;
         /*CompoundButton.OnCheckedChangeListener m_checkboxListener =
@@ -66,10 +76,9 @@ public class ItemAdapter extends DragItemAdapter<Utils.RestaurantOrderItem, Item
             };*/
 
         public ViewHolder(final View itemView) {
-            super(itemView, mGrabHandleId, false);
+            super(itemView, mGrabHandleId);
             mText = (TextView) itemView.findViewById(R.id.text);
             mCheckBox = (CheckBox)itemView.findViewById(R.id.restcheckbox);
-            mCheckBox.setOnCheckedChangeListener(this);
         }
 
         @Override
@@ -81,20 +90,6 @@ public class ItemAdapter extends DragItemAdapter<Utils.RestaurantOrderItem, Item
         public boolean onItemLongClicked(View view) {
             //Toast.makeText(view.getContext(), "Item long clicked", Toast.LENGTH_SHORT).show();
             return true;
-        }
-
-        @Override
-        public void onCheckedChanged(CompoundButton button, boolean isChecked){
-            Integer id = (Integer)button.getTag();
-            if(id == null){
-                return;
-            }
-            for(int i = 0; i < mItemList.size(); i++){
-                if(mItemList.get(i).m_id == id){
-                    mItemList.get(i).m_isActive = isChecked;
-                    return;
-                }
-            }
         }
     }
 }

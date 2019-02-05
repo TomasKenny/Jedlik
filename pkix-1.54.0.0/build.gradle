@@ -1,0 +1,2 @@
+configurations.create("default")
+artifacts.add("default", file('pkix-1.54.0.0.jar'))
