@@ -73,9 +73,9 @@ public class RestaurantMakalu extends CRestaurantBase {
         for(String oneMealStr: mealsToday) {
             if(oneMealStr.contains("polévka") || oneMealStr.contains("polevka")){
                 String [] soupArray = oneMealStr.split("<br>");
-                if(soupArray.length > 0){
-                    String soupName = soupArray[soupArray.length - 1];
-                    soupName = soupName.replaceAll("/.*", "");
+                if(soupArray.length >= 2){
+                    String soupName = soupArray[1];
+                    soupName = soupName.replaceAll("<.*", "");
                     meals.add(new CMeal(soupName, 0));
                 }
                 continue;
