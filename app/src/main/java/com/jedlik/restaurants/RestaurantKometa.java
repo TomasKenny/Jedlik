@@ -68,7 +68,7 @@ public class RestaurantKometa extends CRestaurantBase
                     return meals;
             }
 
-            Document doc = Jsoup.connect("http://arena.kometapub.cz/tydenni-menu.php").get();
+            Document doc = Jsoup.connect("https://arena.kometapub.cz/tydenni-menu.php").get();
             Element content = doc.getElementById(elementName);
             Elements todayMeals = content.getElementsByTag("tr");
 
