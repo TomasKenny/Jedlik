@@ -146,7 +146,7 @@ public class SortingPreference extends DialogPreference {
 
         mItemArray = (ArrayList<Utils.RestaurantOrderItem>)GetRestaurantsOrder();
         m_sortView.setLayoutManager(new LinearLayoutManager(getContext()));
-        ItemAdapter listAdapter = new ItemAdapter(mItemArray, R.layout.list_item, R.id.image, false);
+        ItemAdapter listAdapter = new ItemAdapter(mItemArray, R.layout.list_item, R.id.image);
         m_sortView.setAdapter(listAdapter, true);
         m_sortView.setCanDragHorizontally(false);
         m_sortView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item));
